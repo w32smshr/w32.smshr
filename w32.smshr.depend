@@ -1,0 +1,22 @@
+# depslib dependency file v1.0
+1399716328 source:c:\users\null\documents\github\w32.smshr\src\daemon.c
+	<windows.h>
+	<stdio.h>
+	<tchar.h>
+
+1402442893 source:c:\users\null\documents\github\w32.smshr\src\irc.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdint.h>
+	<windows.h>
+	<winsock.h>
+
+1402443550 source:c:\users\null\documents\github\w32.smshr\src\main.c
+	<stdio.h>
+	<stdlib.h>
+	"irc.h"
+
+1402443102 c:\users\null\documents\github\w32.smshr\src\irc.h
+	<stdint.h>
+

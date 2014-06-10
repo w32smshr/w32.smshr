@@ -1,68 +1,100 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 #include <windows.h>
 #include <winsock.h>
 
-int main(int argc, char * argv[])
-{
-    int eid;
-    WORD wsaVersion;
+#define IRC_BUFSIZ 128
+
+
+static unsigned int sockfd = -1;
+static WORD wsaVersion;
+static WSADATA wsaData;
+static struct sockaddr_in sock;
+
+
+int initWSA(void) {
     wsaVersion = MAKEWORD(2, 0);
-    WSADATA wsaData;
+    return(WSAStartup(wsaVersion, &wsaData));
+}
 
-    eid = WSAStartup(wsaVersion, &wsaData);
+int openSocket(void) {
+    return ((sockfd = socket(AF_INET, SOCK_STREAM, 0)));
+}
 
-    if (eid != 0)
-    {
-        printf("WinSock startup failed.\r\n");
+int connectSocket(const char *host, uint16_t port) {
+    sock.sin_family = AF_INET;
+    sock.sin_port = htons(port);
+    sock.sin_addr.s_addr = inet_addr(host);
+    return (connect(sockfd, (struct sockaddr *) &sock, sizeof sock));
+}
+
+int botHello(const char *nick, const char *user, const char *name) {
+    char buf[IRC_BUFSIZ+1];
+
+    memset(buf, 0, sizeof buf);
+    snprintf(buf, sizeof buf-1, "NICK %s\r\n", nick);
+    if (send(sockfd, buf, strlen(buf), 0) < 0) {
+        return -1;
     }
-
-    unsigned int fd;
-
-    fd = socket(AF_INET, SOCK_STREAM, 0);
-
-    if (fd < 0)
-    {
-        printf("Error in socket file descripter.\r\n");
+    memset(buf, 0, sizeof buf);
+    snprintf(buf, sizeof buf-1, "USER %s \"\" \"\" :%s\r\n", user, name);
+    if (send(sockfd, buf, strlen(buf), 0) < 0) {
+        return -1;
     }
+    return 0;
+}
 
-    struct sockaddr_in s;
+void botLoop(void) {
+    int retval;
+    char buffer[IRC_BUFSIZ+1], suffix[IRC_BUFSIZ+1];
 
-    s.sin_family = AF_INET;
-    s.sin_port = htons(6667);
-    s.sin_addr.s_addr = inet_addr("208.53.152.214");
-
-    eid = connect(fd, (struct sockaddr *) &s, sizeof s);
-    if (eid < 0)
-    {
-        printf("Error connecting socket.\r\n");
-    }
-
-    char buffer[512], suffix[512];
-    memset(buffer, 0, sizeof buffer);
-    sprintf(buffer, "NICK %s\r\n", "windows");
-    send(fd, buffer, strlen(buffer), 0);
-    memset(buffer, 0, sizeof buffer);
-    sprintf(buffer, "USER %s \"\" \"\" :%s\r\n", "svs", "c winsock");
-    send(fd, buffer, strlen(buffer), 0);
-    memset(buffer, 0, sizeof buffer);
     while (1)
     {
-        eid = recv(fd, buffer, sizeof buffer, 0);
-        if (eid <= 0)
+        memset(buffer, 0, sizeof buffer);
+        memset(suffix, 0, sizeof suffix);
+        retval = recv(sockfd, buffer, sizeof buffer-1, 0);
+        if (retval <= 0)
         {
             break;
         }
-        if (sscanf(buffer, "PING :%s", suffix) > 0)
+        if (sscanf(buffer, "PING :%64s", suffix) > 0)
         {
-            sprintf(buffer, "PONG :%s\r\n", suffix);
-            send(fd, buffer, strlen(buffer), 0);
+            sprintf(buffer, "PONG :%64s\r\n", suffix);
+            send(sockfd, buffer, strlen(buffer), 0);
         }
         printf("%s\r\n", buffer);
-        memset(buffer, 0, sizeof buffer);
     }
-    closesocket(fd);
+}
+
+void ircCleanup(void) {
+    closesocket(sockfd);
     WSACleanup();
-    getchar();
+}
+
+int prepareBot(const char *host, uint16_t port) {
+    int retval;
+
+    if ((retval = initWSA()) != 0) {
+#ifdef SMSHR_DEBUG
+        perror("WSA init failed");
+#endif
+        return retval;
+    }
+
+    if ((retval = openSocket()) < 0) {
+#ifdef SMSHR_DEBUG
+        perror("open Socket failed");
+#endif
+        return retval;
+    }
+
+    if ((retval = connectSocket(host, port)) < 0) {
+#ifdef SMSHR_DEBUG
+        perror("connect Socket failed");
+#endif
+        return retval;
+    }
     return 0;
 }
