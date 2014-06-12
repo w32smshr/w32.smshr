@@ -4,19 +4,32 @@
 	<stdio.h>
 	<tchar.h>
 
-1402442893 source:c:\users\null\documents\github\w32.smshr\src\irc.c
+1402508938 source:c:\users\null\documents\github\w32.smshr\src\irc.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	<stdint.h>
 	<windows.h>
 	<winsock.h>
+	"log.h"
 
-1402443550 source:c:\users\null\documents\github\w32.smshr\src\main.c
+1402444046 source:c:\users\null\documents\github\w32.smshr\src\main.c
 	<stdio.h>
 	<stdlib.h>
 	"irc.h"
 
 1402443102 c:\users\null\documents\github\w32.smshr\src\irc.h
 	<stdint.h>
+
+1402510953 source:c:\users\null\documents\github\w32.smshr\src\infector.c
+	<stdio.h>
+	<stdlib.h>
+	<malloc.h>
+	<stdbool.h>
+	<conio.h>
+	<string.h>
+	<windows.h>
+	"log.h"
+
+1402509401 c:\users\null\documents\github\w32.smshr\src\log.h
 

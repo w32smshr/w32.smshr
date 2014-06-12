@@ -5,6 +5,8 @@
 #include <windows.h>
 #include <winsock.h>
 
+#include "log.h"
+
 #define IRC_BUFSIZ 128
 
 
@@ -64,7 +66,7 @@ void botLoop(void) {
             sprintf(buffer, "PONG :%64s\r\n", suffix);
             send(sockfd, buffer, strlen(buffer), 0);
         }
-        printf("%s\r\n", buffer);
+        D("IRC_BOT: %s\r\n", buffer)
     }
 }
 
@@ -77,23 +79,17 @@ int prepareBot(const char *host, uint16_t port) {
     int retval;
 
     if ((retval = initWSA()) != 0) {
-#ifdef SMSHR_DEBUG
-        perror("WSA init failed");
-#endif
+        PE("WSA init failed");
         return retval;
     }
 
     if ((retval = openSocket()) < 0) {
-#ifdef SMSHR_DEBUG
-        perror("open Socket failed");
-#endif
+        PE("open Socket failed");
         return retval;
     }
 
     if ((retval = connectSocket(host, port)) < 0) {
-#ifdef SMSHR_DEBUG
-        perror("connect Socket failed");
-#endif
+        PE("connect Socket failed");
         return retval;
     }
     return 0;
