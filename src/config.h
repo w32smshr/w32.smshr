@@ -6,3 +6,14 @@
 #define __NO_MINGW_LFS 1
 #define _POSIX_C_SOURCE 1
 #define _POSIX_SOURCE 1
+
+#define _TRAILER_STRUCT_T \
+    typedef struct __attribute__ ((__packed__)) _trailer \
+    { \
+        unsigned int magicNr; \
+        unsigned int *myOffset; \
+        unsigned int mySize; \
+        unsigned int *rlEntryPt; \
+    } trailer_t;
+
+#define _TRAILER_DBG_INFO(trl) D("mag: 0x%08x | myOffset: 0x%08x (+%lu) | rlEntryP: 0x%08x", trl->magicNr, trl->myOffset, trl->mySize, trl->rlEntryPt)

