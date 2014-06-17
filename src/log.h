@@ -2,7 +2,7 @@
 #define LOG_H_INCLUDED
 
 
-#ifdef SMSHR_DEBUG
+#ifdef _SMSHR_DEBUG
 # define PKG_NAME "w32smshr"
 # ifndef D
 #  define LOG_DBG_HDR printf("[DBG]:" PKG_NAME "(%s.%d): ", __FILE__, __LINE__)
@@ -16,6 +16,8 @@
 #else
 # define D(fmt, ...)
 # define D2(str)
+# define E(fmt, ...)
+# define E2(str)
 # define PE(str)
 #endif
 

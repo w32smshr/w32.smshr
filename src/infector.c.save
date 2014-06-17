@@ -3,8 +3,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <string.h>
+
 #include "log.h"
 
+
+#define MAGIC_COOKIE 0x0DD28491
 
 typedef struct __attribute__ ((__packed__)) _trailer
 {
@@ -123,7 +127,7 @@ int infectFile(char *buf, size_t siz, char *target)
     if ((trl = getTrailer(fp)) != NULL)
     {
         D2("file infection succeeded")
-        D("mag: 0x%08x | myOffset: 0x%08x | rlEntryP: 0x%08x", trl->magicNr, trl->myOffset, trl->rlEntryPt)
+        D("mag: %lu | myOffset: 0x%08x | rlEntryP: 0x%08x", )
     }
     else
     {

@@ -24,15 +24,17 @@
 1402443102 c:\users\null\documents\github\w32.smshr\src\irc.h
 	<stdint.h>
 
-1402964899 source:c:\users\null\documents\github\w32.smshr\src\infector.c
+1402991642 source:c:\users\null\documents\github\w32.smshr\src\infector.c
 	"config.h"
 	<stdio.h>
 	<stdlib.h>
+	<windef.h>
+	<windows.h>
 	"log.h"
 
-1402963572 c:\users\null\documents\github\w32.smshr\src\log.h
+1402987433 c:\users\null\documents\github\w32.smshr\src\log.h
 
-1402929132 c:\users\null\documents\github\w32.smshr\src\config.h
+1402987892 c:\users\null\documents\github\w32.smshr\src\config.h
 
 1402963940 c:\users\null\documents\github\w32.smshr\src\infector.h
 

