@@ -13,23 +13,26 @@
 	<winsock.h>
 	"log.h"
 
-1402444046 source:c:\users\null\documents\github\w32.smshr\src\main.c
+1402963964 source:c:\users\null\documents\github\w32.smshr\src\main.c
+	"config.h"
 	<stdio.h>
 	<stdlib.h>
+	"log.h"
 	"irc.h"
+	"infector.h"
 
 1402443102 c:\users\null\documents\github\w32.smshr\src\irc.h
 	<stdint.h>
 
-1402510953 source:c:\users\null\documents\github\w32.smshr\src\infector.c
+1402964899 source:c:\users\null\documents\github\w32.smshr\src\infector.c
+	"config.h"
 	<stdio.h>
 	<stdlib.h>
-	<malloc.h>
-	<stdbool.h>
-	<conio.h>
-	<string.h>
-	<windows.h>
 	"log.h"
 
-1402509401 c:\users\null\documents\github\w32.smshr\src\log.h
+1402963572 c:\users\null\documents\github\w32.smshr\src\log.h
+
+1402929132 c:\users\null\documents\github\w32.smshr\src\config.h
+
+1402963940 c:\users\null\documents\github\w32.smshr\src\infector.h
 

