@@ -13,7 +13,9 @@
 #  define E2(str) LOG_ERR_HDR; fprintf(stderr, str); fprintf(stderr, "\r\n");
 #  define PE(str) perror(str);
 # endif
+# define _TRAILER_DBG_INFO(trl) D("mag: 0x%08x | myOffset: 0x%08x (+%lu) | rlEntryP: 0x%08x", trl->magicNr, trl->myOffset, trl->mySize, trl->rlEntryPt)
 #else
+# define _TRAILER_DBG_INFO(trl)
 # define D(fmt, ...)
 # define D2(str)
 # define E(fmt, ...)

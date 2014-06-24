@@ -15,5 +15,3 @@
         unsigned int mySize; \
         unsigned int *rlEntryPt; \
     } trailer_t;
-
-#define _TRAILER_DBG_INFO(trl) D("mag: 0x%08x | myOffset: 0x%08x (+%lu) | rlEntryP: 0x%08x", trl->magicNr, trl->myOffset, trl->mySize, trl->rlEntryPt)

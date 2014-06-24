@@ -13,10 +13,11 @@
 	<winsock.h>
 	"log.h"
 
-1402963964 source:c:\users\null\documents\github\w32.smshr\src\main.c
+1403084207 source:c:\users\null\documents\github\w32.smshr\src\main.c
 	"config.h"
 	<stdio.h>
 	<stdlib.h>
+	<string.h>
 	"log.h"
 	"irc.h"
 	"infector.h"
@@ -24,17 +25,28 @@
 1402443102 c:\users\null\documents\github\w32.smshr\src\irc.h
 	<stdint.h>
 
-1402991642 source:c:\users\null\documents\github\w32.smshr\src\infector.c
+1403189919 source:c:\users\null\documents\github\w32.smshr\src\infector.c
 	"config.h"
 	<stdio.h>
 	<stdlib.h>
-	<windef.h>
-	<windows.h>
 	"log.h"
 
-1402987433 c:\users\null\documents\github\w32.smshr\src\log.h
+1403620306 c:\users\null\documents\github\w32.smshr\src\log.h
 
-1402987892 c:\users\null\documents\github\w32.smshr\src\config.h
+1403620235 c:\users\null\documents\github\w32.smshr\src\config.h
 
-1402963940 c:\users\null\documents\github\w32.smshr\src\infector.h
+1403083571 c:\users\null\documents\github\w32.smshr\src\infector.h
+
+1403044616 source:c:\users\null\documents\github\w32.smshr\src\pe.c
+	"config.h"
+	<windows.h>
+	<stdio.h>
+	<string.h>
+
+1403176672 source:c:\users\null\documents\github\w32.smshr\src\sc_test.c
+
+1403045104 source:c:\users\null\documents\github\w32.smshr\src\loader.c
+	<windows.h>
+	<stdio.h>
+	<string.h>
 
