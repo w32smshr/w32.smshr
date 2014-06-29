@@ -14,8 +14,15 @@
 #  define PE(str) perror(str);
 # endif
 # define _TRAILER_DBG_INFO(trl) D("mag: 0x%08x | myOffset: 0x%08x (+%lu) | rlEntryP: 0x%08x", trl->magicNr, trl->myOffset, trl->mySize, trl->rlEntryPt)
+# define _PE_DBG_INFO(pehdr) D("arch: 0x%03x (%s) | sections: %d | sectionOffset: %d | entryPoint: 0x%04x", \
+  pehdr->pNtHeader->FileHeader.Machine, \
+  (pehdr->pNtHeader->FileHeader.Machine == 0x14c ? "i386" : "non-i386"), \
+  pehdr->pNtHeader->FileHeader.NumberOfSections, \
+  pehdr->SectionOffset, \
+  pehdr->pNtHeader->OptionalHeader.AddressOfEntryPoint)
 #else
 # define _TRAILER_DBG_INFO(trl)
+# define _PE_DBG_INFO(pehdr)
 # define D(fmt, ...)
 # define D2(str)
 # define E(fmt, ...)

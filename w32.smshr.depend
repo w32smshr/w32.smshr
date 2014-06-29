@@ -25,23 +25,26 @@
 1402443102 c:\users\null\documents\github\w32.smshr\src\irc.h
 	<stdint.h>
 
-1403189919 source:c:\users\null\documents\github\w32.smshr\src\infector.c
+1403647269 source:c:\users\null\documents\github\w32.smshr\src\infector.c
 	"config.h"
 	<stdio.h>
 	<stdlib.h>
 	"log.h"
+	"utils.h"
 
-1403620306 c:\users\null\documents\github\w32.smshr\src\log.h
+1404073270 c:\users\null\documents\github\w32.smshr\src\log.h
 
-1403620235 c:\users\null\documents\github\w32.smshr\src\config.h
+1403630027 c:\users\null\documents\github\w32.smshr\src\config.h
 
 1403083571 c:\users\null\documents\github\w32.smshr\src\infector.h
 
-1403044616 source:c:\users\null\documents\github\w32.smshr\src\pe.c
+1404071810 source:c:\users\null\documents\github\w32.smshr\src\pe.c
 	"config.h"
 	<windows.h>
 	<stdio.h>
 	<string.h>
+	"log.h"
+	"pe.h"
 
 1403176672 source:c:\users\null\documents\github\w32.smshr\src\sc_test.c
 
@@ -49,4 +52,16 @@
 	<windows.h>
 	<stdio.h>
 	<string.h>
+
+1403650203 c:\users\null\documents\github\w32.smshr\src\utils.h
+
+1403655519 c:\users\null\documents\github\w32.smshr\src\pe.h
+	<windows.h>
+	<stdio.h>
+
+1403628279 source:c:\users\null\documents\github\w32.smshr\src\utils.c
+	"config.h"
+	<stdio.h>
+	<stdlib.h>
+	"utils.h"
 
